@@ -9,8 +9,11 @@ import java.util.List;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        final String Supply = "supply";
+        final String Buy = "buy";
         int supplyAmount = 0;
         int buyAmount = 0;
+
         File myFile = new File(fromFileName);
         List<String> lines;
         try {
@@ -20,33 +23,25 @@ public class WorkWithFile {
         }
 
         for (String line : lines) {
-            int bruh = line.indexOf(",");
-            String operation = line.substring(0, bruh);
-            String amountStr = line.substring(bruh + 1);
+            if (line == null || line.isEmpty()) {
+                System.out.println("The line is empty");
+                continue;
+            }
+            int commaIndex = line.indexOf(",");
+            String operation = line.substring(0, commaIndex);
+            String amountStr = line.substring(commaIndex + 1);
             int amount = Integer.parseInt(amountStr);
-            if(operation.equals("supply")) {
+            if (operation.equals(Supply)) {
                 supplyAmount += amount;
-            } else if (operation.equals("buy")) {
+            } else if (operation.equals(Buy)) {
                 buyAmount += amount;
             }
         }
-        FileWriter fileWriter = null;
-        try {
-            fileWriter = new FileWriter(myFile);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         int result = supplyAmount - buyAmount;
-        try {
-            bufferedWriter.write("supply," + supplyAmount);
-            bufferedWriter.write("buy," + buyAmount);
-            bufferedWriter.write("result," + result);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            bufferedWriter.close();
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write("supply," + supplyAmount + "\n");
+            bufferedWriter.write("buy," + buyAmount + "\n");
+            bufferedWriter.write("result," + result + "\n");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
