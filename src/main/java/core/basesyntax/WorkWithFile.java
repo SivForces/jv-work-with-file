@@ -8,10 +8,12 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String DELIMITER = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        private static final String SUPPLY = "supply";
-        private static final String BUY = "buy";
-        private static final String DELIMITER = ",";
+
         int supplyAmount = 0;
         int buyAmount = 0;
 
